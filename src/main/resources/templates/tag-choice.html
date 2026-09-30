@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0">
+
+    <title>Choose Analysis | DuelMetrics</title>
+
+    <link rel="stylesheet" href="/css/styles.css">
+</head>
+
+<body class="choice-page">
+
+<header class="site-header choice-header">
+    <a class="brand" href="/">
+        <span class="brand-eye">◉</span>
+        <span>DUELMETRICS</span>
+    </a>
+
+    <span class="build-label">DECK IMPORTED</span>
+</header>
+
+<main class="choice-main">
+
+    <section class="choice-container">
+
+        <div class="choice-emblem">
+            <img
+                src="/images/millennium-eye.jpg"
+                alt="Ancient Egyptian Wedjat Eye">
+        </div>
+
+        <div class="choice-content">
+
+            <p class="eyebrow">
+                ANALYSIS CONFIGURATION
+            </p>
+
+            <h1>
+                ASSIGN CARD<br>
+                <span>ROLES?</span>
+            </h1>
+
+            <p class="choice-description">
+                Would you like to mark your cards as starters,
+                extenders, bricks, hand traps, board breakers,
+                and tech cards?
+            </p>
+
+            <div class="imported-deck-information">
+
+                <p>IMPORTED DECK</p>
+
+                <h2 th:text="${deckName}">
+                    Deck Name
+                </h2>
+
+                <div class="choice-counts">
+
+                    <span>
+                        <strong th:text="${mainDeckCount}">
+                            0
+                        </strong>
+                        MAIN
+                    </span>
+
+                    <span>
+                        <strong th:text="${extraDeckCount}">
+                            0
+                        </strong>
+                        EXTRA
+                    </span>
+
+                    <span>
+                        <strong th:text="${sideDeckCount}">
+                            0
+                        </strong>
+                        SIDE
+                    </span>
+
+                </div>
+
+            </div>
+
+            <form
+                class="choice-buttons"
+                action="/tag-choice"
+                method="post">
+
+                <button
+                    type="submit"
+                    name="choice"
+                    value="yes"
+                    class="choice-button yes-choice">
+
+                    <span>YES</span>
+
+                    <small>
+                        Assign roles before analysis
+                    </small>
+                </button>
+
+                <button
+                     type="submit"
+                     name="choice"
+                    value="no"
+                    class="choice-button no-choice">
+
+                <span>NO</span>
+
+                    <small>
+                      Continue without card roles
+                 </small>
+                </button>
+
+            </form>
+
+            <p class="choice-development">
+                Quick analysis without roles will be connected next.
+            </p>
+
+            <div
+                class="upload-message error-message"
+                th:if="${errorMessage}"
+                th:text="${errorMessage}">
+            </div>
+
+            <a class="return-link" href="/">
+                ← IMPORT A DIFFERENT DECK
+            </a>
+
+        </div>
+
+    </section>
+
+</main>
+
+</body>
+</html>

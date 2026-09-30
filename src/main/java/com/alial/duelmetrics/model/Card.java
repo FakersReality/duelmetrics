@@ -9,6 +9,7 @@ public class Card {
     private final long id;
     private final String name;
     private final CardType type;
+    private final String imageUrl;
     private final Set<CardRole> roles;
 
     public Card(
@@ -17,9 +18,26 @@ public class Card {
             CardType type,
             CardRole... roles
     ) {
+        this(
+                id,
+                name,
+                type,
+                "",
+                roles
+        );
+    }
+
+    public Card(
+            long id,
+            String name,
+            CardType type,
+            String imageUrl,
+            CardRole... roles
+    ) {
         this.id = id;
         this.name = name;
         this.type = type;
+        this.imageUrl = imageUrl;
         this.roles = EnumSet.noneOf(CardRole.class);
 
         Collections.addAll(this.roles, roles);
@@ -35,6 +53,10 @@ public class Card {
 
     public CardType getType() {
         return type;
+    }
+
+    public String getImageUrl() {
+        return imageUrl;
     }
 
     public Set<CardRole> getRoles() {

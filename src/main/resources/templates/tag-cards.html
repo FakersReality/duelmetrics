@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0">
+
+    <title>Assign Card Roles | DuelMetrics</title>
+
+    <link rel="stylesheet" href="/css/styles.css">
+</head>
+
+<body class="tag-page">
+
+<header class="site-header tag-header">
+    <a class="brand" href="/">
+        <span class="brand-eye">◉</span>
+        <span>DUELMETRICS</span>
+    </a>
+
+    <span class="build-label">ROLE CONFIGURATION</span>
+</header>
+
+<main class="tag-main">
+
+    <section class="tag-introduction">
+        <div>
+            <p class="eyebrow">CARD CLASSIFICATION</p>
+
+            <h1>
+                ASSIGN YOUR<br>
+                <span>CARD ROLES.</span>
+            </h1>
+        </div>
+
+        <div class="tag-description">
+            <p>
+                A card may have more than one role. For example,
+                a card can be both a starter and an extender.
+            </p>
+
+            <p class="tagged-deck-name">
+                DECK:
+                <strong th:text="${deckName}">
+                    Deck Name
+                </strong>
+            </p>
+        </div>
+    </section>
+
+    <form
+    class="card-role-form"
+    action="/analyze"
+    method="post">
+
+        <div class="card-tag-list">
+
+            <article
+                class="card-tag-row"
+                th:each="card : ${cards}">
+
+                <div class="card-identity">
+                    <div class="card-thumbnail">
+        <img
+            th:src="${card.imageUrl}"
+            th:alt="${card.name}">
+    </div>
+
+                    <span
+                        class="card-quantity"
+                        th:text="${card.quantity + 'x'}">
+                        1x
+                    </span>
+
+                    <div>
+                        <h2 th:text="${card.name}">
+                            Card Name
+                        </h2>
+
+                        <p>
+                            <span th:text="${card.type}">
+                                Card Type
+                            </span>
+
+                            <span class="card-id">
+                                ID:
+                                <span th:text="${card.id}">
+                                    00000000
+                                </span>
+                            </span>
+                        </p>
+                    </div>
+
+                </div>
+
+                <div class="role-options">
+
+                    <label
+                        class="role-option"
+                        th:each="role : ${cardRoles}">
+
+                        <input
+                            type="checkbox"
+                            th:name="${'roles_' + card.id}"
+                            th:value="${role.name()}">
+
+                        <span
+                            th:text="${#strings.replace(
+                                role.name(),
+                                '_',
+                                ' '
+                            )}">
+                            ROLE
+                        </span>
+
+                    </label>
+
+                </div>
+
+            </article>
+
+        </div>
+
+        <div class="tag-form-actions">
+
+            <a class="return-link" href="/tag-choice">
+                ← RETURN TO CHOICE
+            </a>
+
+            <button
+                type="submit"
+                class="analyze-button role-submit-button"
+                >
+
+                SAVE ROLES AND ANALYZE
+                <span>→</span>
+            </button>
+
+        </div>
+
+
+    </form>
+
+</main>
+
+</body>
+</html>

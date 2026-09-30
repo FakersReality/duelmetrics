@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0">
+
+    <title>Deck Breakdown | DuelMetrics</title>
+
+    <link rel="stylesheet" href="/css/styles.css">
+</head>
+
+<body class="breakdown-page">
+
+<header class="site-header breakdown-header">
+
+    <a class="brand" href="/">
+        <span class="brand-eye">◉</span>
+        <span>DUELMETRICS</span>
+    </a>
+
+    <a class="build-label" href="/">
+        NEW ANALYSIS
+    </a>
+
+</header>
+
+<main class="breakdown-main">
+
+    <!-- DECK TITLE -->
+    <section class="breakdown-title">
+
+        <p class="eyebrow">
+            ANALYSIS COMPLETE
+        </p>
+
+        <h1 th:text="${analysis.deckName}">
+            Deck Name
+        </h1>
+
+        <p>
+            Results generated from your imported deck.
+        </p>
+
+    </section>
+
+
+    <!-- DECK COUNTS -->
+    <section class="breakdown-counts">
+
+        <article>
+            <strong th:text="${analysis.mainDeckCount}">
+                0
+            </strong>
+
+            <span>MAIN DECK</span>
+        </article>
+
+        <article>
+            <strong th:text="${analysis.extraDeckCount}">
+                0
+            </strong>
+
+            <span>EXTRA DECK</span>
+        </article>
+
+        <article>
+            <strong th:text="${analysis.sideDeckCount}">
+                0
+            </strong>
+
+            <span>SIDE DECK</span>
+        </article>
+
+        <article>
+            <strong
+                th:text="${analysis.validMainDeck
+                    ? 'VALID'
+                    : 'INVALID'}">
+                VALID
+            </strong>
+
+            <span>DECK STATUS</span>
+        </article>
+
+    </section>
+
+
+    <!-- ROLE PROBABILITIES -->
+    <section
+        class="analysis-section"
+        th:if="${analysis.rolesAssigned}">
+
+        <div class="analysis-heading">
+
+            <p class="eyebrow">
+                10,000 OPENING HANDS
+            </p>
+
+            <h2>ROLE PROBABILITIES</h2>
+
+        </div>
+
+        <div class="probability-list">
+
+            <article
+                class="probability-row"
+                th:each="result : ${analysis.roleResults}">
+
+                <div class="probability-name">
+
+                    <span th:text="${result.role}">
+                        STARTER
+                    </span>
+
+                    <strong>
+                        <span
+                            th:text="${#numbers.formatDecimal(
+                                result.probability,
+                                1,
+                                2
+                            )}">
+                            0.00
+                        </span>%
+                    </strong>
+
+                </div>
+
+                <div class="probability-track">
+
+                    <div
+                        class="probability-fill"
+                        th:style="|width: ${result.probability}%|">
+                    </div>
+
+                </div>
+
+                <small>
+                    <span th:text="${result.successfulHands}">
+                        0
+                    </span>
+
+                    successful hands out of
+
+                    <span th:text="${result.totalHands}">
+                        10000
+                    </span>
+                </small>
+
+            </article>
+
+        </div>
+
+    </section>
+
+
+    <!-- NO ROLES MESSAGE -->
+    <section
+        class="analysis-section missing-roles"
+        th:unless="${analysis.rolesAssigned}">
+
+        <p class="eyebrow">
+            ROLE ANALYSIS
+        </p>
+
+        <h2>NO ROLES ASSIGNED</h2>
+
+        <p>
+            Role probabilities are unavailable because
+            card tagging was skipped.
+        </p>
+
+    </section>
+
+
+    <!-- OPENING HAND -->
+    <section
+        class="analysis-section"
+        id="opening-hand">
+
+        <div class="analysis-heading">
+
+            <p class="eyebrow">
+                RANDOM DRAW
+            </p>
+
+            <h2>SAMPLE OPENING HAND</h2>
+
+        </div>
+
+        <div class="opening-hand">
+
+    <article
+        class="hand-card"
+        th:each="card : ${analysis.openingHand}">
+
+        <img
+            class="hand-card-image"
+            th:src="${card.imageUrl}"
+            th:alt="${card.name}">
+
+        <div class="hand-card-information">
+
+            <span th:text="${card.type}">
+                MONSTER
+            </span>
+
+            <h3 th:text="${card.name}">
+                Card Name
+            </h3>
+
+            <p th:text="${card.roles}">
+                UNTAGGED
+            </p>
+
+        </div>
+
+    </article>
+
+</div>
+
+        <form
+            class="draw-another-form"
+            action="/draw-another"
+            method="post">
+
+            <p>
+                Not satisfied with fate's decision?
+            </p>
+
+            <button
+                type="submit"
+                class="draw-another-button">
+
+                DRAW ANOTHER HAND
+                <span>↻</span>
+
+            </button>
+
+        </form>
+
+    </section>
+
+
+    <!-- MAIN DECK -->
+    <section class="analysis-section">
+
+        <div class="analysis-heading">
+
+            <p class="eyebrow">
+                COMPLETE LIST
+            </p>
+
+            <h2>MAIN DECK</h2>
+
+        </div>
+
+        <div class="breakdown-card-list">
+
+            <article
+                class="breakdown-card-row"
+                th:each="card : ${analysis.mainCards}">
+
+                <strong th:text="${card.quantity + 'x'}">
+                    1x
+                </strong>
+
+                <div>
+                    <h3 th:text="${card.name}">
+                        Card Name
+                    </h3>
+
+                    <p th:text="${card.type}">
+                        Card Type
+                    </p>
+                </div>
+
+                <span
+                    class="breakdown-role"
+                    th:text="${card.roles}">
+                    UNTAGGED
+                </span>
+
+            </article>
+
+        </div>
+
+    </section>
+
+
+    <!-- EXTRA DECK -->
+    <section
+        class="analysis-section"
+        th:if="${!analysis.extraCards.isEmpty()}">
+
+        <div class="analysis-heading">
+
+            <p class="eyebrow">
+                COMPLETE LIST
+            </p>
+
+            <h2>EXTRA DECK</h2>
+
+        </div>
+
+        <div class="breakdown-card-list">
+
+            <article
+                class="breakdown-card-row"
+                th:each="card : ${analysis.extraCards}">
+
+                <strong th:text="${card.quantity + 'x'}">
+                    1x
+                </strong>
+
+                <div>
+                    <h3 th:text="${card.name}">
+                        Card Name
+                    </h3>
+
+                    <p th:text="${card.type}">
+                        Card Type
+                    </p>
+                </div>
+
+            </article>
+
+        </div>
+
+    </section>
+
+
+    <!-- SIDE DECK -->
+    <section
+        class="analysis-section"
+        th:if="${!analysis.sideCards.isEmpty()}">
+
+        <div class="analysis-heading">
+
+            <p class="eyebrow">
+                COMPLETE LIST
+            </p>
+
+            <h2>SIDE DECK</h2>
+
+        </div>
+
+        <div class="breakdown-card-list">
+
+            <article
+                class="breakdown-card-row"
+                th:each="card : ${analysis.sideCards}">
+
+                <strong th:text="${card.quantity + 'x'}">
+                    1x
+                </strong>
+
+                <div>
+                    <h3 th:text="${card.name}">
+                        Card Name
+                    </h3>
+
+                    <p th:text="${card.type}">
+                        Card Type
+                    </p>
+                </div>
+
+            </article>
+
+        </div>
+
+    </section>
+
+
+    <!-- BOTTOM ACTIONS -->
+    <section class="breakdown-footer-actions">
+
+        <a class="return-link" href="/">
+            ← ANALYZE ANOTHER DECK
+        </a>
+
+        <a
+            class="return-link"
+            th:if="${analysis.rolesAssigned}"
+            href="/tag-cards">
+
+            CHANGE CARD ROLES →
+        </a>
+
+    </section>
+
+</main>
+
+</body>
+</html>
